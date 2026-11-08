@@ -678,6 +678,21 @@ body { min-width: 0; overflow-x: hidden; }
   sync();
 })();
 </script>
+<script>
+// Keep the first sheet readable: move the complete theme/keywords/flow analysis to sheet 2.
+(() => {
+  const pages = [...document.querySelectorAll('.a4-page')];
+  if (pages.length !== 5) return;
+  const first = pages[0];
+  const second = pages[1];
+  const analysis = first.querySelectorAll('section')[1];
+  const secondBody = second.querySelector(':scope > div');
+  const oldSection = secondBody?.querySelector('section');
+  if (!analysis || !secondBody || !oldSection) return;
+  oldSection.replaceWith(analysis);
+  document.querySelectorAll('.a4-page footer span:last-child').forEach((el, i) => { el.textContent = `Page ${i + 1} / 5`; });
+})();
+</script>
 <style id="five-page-a4-layout">
 /* Five independent A4 sheets: 210 x 297 mm = 1:1.414. */
 .a4-page {
@@ -748,3 +763,18 @@ body { min-width: 0; overflow-x: hidden; }
   .a4-page footer { padding-top: 0.6rem; }
 }
 </style>
+<script>
+// Keep the first sheet readable: move the complete theme/keywords/flow analysis to sheet 2.
+(() => {
+  const pages = [...document.querySelectorAll('.a4-page')];
+  if (pages.length !== 5) return;
+  const first = pages[0];
+  const second = pages[1];
+  const analysis = first.querySelectorAll('section')[1];
+  const secondBody = second.querySelector(':scope > div');
+  const oldSection = secondBody?.querySelector('section');
+  if (!analysis || !secondBody || !oldSection) return;
+  oldSection.replaceWith(analysis);
+  document.querySelectorAll('.a4-page footer span:last-child').forEach((el, i) => { el.textContent = `Page ${i + 1} / 5`; });
+})();
+</script>
