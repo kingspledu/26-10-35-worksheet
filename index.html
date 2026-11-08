@@ -545,3 +545,23 @@ body { min-width: 0; overflow-x: hidden; }
   .a4-page:last-child { page-break-after: auto; break-after: auto; }
 }
 </style>
+<style id="print-density-fix">
+@media print {
+  html { font-size: 17px; }
+  body { font-size: 1rem; }
+  .a4-page {
+    padding: 10mm 14mm;
+  }
+  .a4-page > div {
+    width: 100%;
+  }
+  .a4-page section { margin-bottom: 1.15rem; }
+  .a4-page .space-y-3 > :not([hidden]) ~ :not([hidden]),
+  .a4-page .space-y-3\.5 > :not([hidden]) ~ :not([hidden]),
+  .a4-page .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1.15rem;
+  }
+  .a4-page p, .a4-page li { line-height: 1.55; }
+  .a4-page footer { padding-top: 0.6rem; }
+}
+</style>
