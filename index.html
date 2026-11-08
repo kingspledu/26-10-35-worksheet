@@ -573,6 +573,96 @@ body { min-width: 0; overflow-x: hidden; }
   .a4-page:last-child { page-break-after: auto; break-after: auto; }
 }
 </style>
+<style id="overflow-and-type-controls">
+/* Allow print engines to continue long content onto the next physical sheet. */
+@media print {
+  .a4-page {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  .a4-page section, .a4-page table, .a4-page .bg-slate-50 {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+}
+.type-controls {
+  position: fixed;
+  z-index: 50;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 205px;
+  padding: .8rem;
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, .96);
+  border: 1px solid #334155;
+  border-radius: .8rem;
+  box-shadow: 0 12px 30px rgba(15,23,42,.25);
+}
+.type-controls label { display:block; margin:.55rem 0 .25rem; font-size:.72rem; font-weight:700; }
+.type-controls select, .type-controls input { width:100%; }
+.type-controls select { color:#0f172a; border-radius:.35rem; padding:.25rem; font-size:.75rem; }
+.type-controls output { float:right; color:#93c5fd; font-size:.7rem; font-weight:700; }
+@media (max-width: 1100px) { .type-controls { right:.5rem; width:185px; } }
+@media (max-width: 820px) { .type-controls { top:auto; bottom:.6rem; right:.6rem; transform:none; width:calc(100vw - 1.2rem); } }
+@media print { .type-controls { display:none !important; } }
+.adjustable-section p, .adjustable-section li, .adjustable-section td, .adjustable-section th,
+.adjustable-section h1, .adjustable-section h2, .adjustable-section h3, .adjustable-section h4 {
+  font-size: calc(1em * var(--section-font-scale, 1));
+  line-height: var(--section-line-height, 1.5);
+}
+</style>
+<div class="type-controls no-print" aria-label="부분별 글자 크기 및 줄간격 조절">
+  <div class="font-bold text-sm">부분별 글자 설정</div>
+  <label for="sectionPicker">조정할 부분</label>
+  <select id="sectionPicker"></select>
+  <label for="fontScale">글자 크기 <output id="fontScaleValue">100%</output></label>
+  <input id="fontScale" type="range" min="85" max="120" value="100" step="1">
+  <label for="lineHeight">줄간격 <output id="lineHeightValue">1.50</output></label>
+  <input id="lineHeight" type="range" min="110" max="210" value="150" step="1">
+  <button id="resetType" type="button" class="mt-2 w-full rounded bg-slate-700 px-2 py-1 text-xs font-bold hover:bg-slate-600">선택 부분 초기화</button>
+</div>
+<script>
+(() => {
+  const sections = [...document.querySelectorAll('.a4-page section')];
+  const picker = document.getElementById('sectionPicker');
+  const font = document.getElementById('fontScale');
+  const line = document.getElementById('lineHeight');
+  const fontValue = document.getElementById('fontScaleValue');
+  const lineValue = document.getElementById('lineHeightValue');
+  const reset = document.getElementById('resetType');
+  if (!picker || !sections.length) return;
+  sections.forEach((section, index) => {
+    section.classList.add('adjustable-section');
+    section.dataset.sectionId = String(index);
+    const heading = section.querySelector('.section-badge, .step-badge, h3, h4');
+    const label = (heading?.textContent || `부분 ${index + 1}`).replace(/\s+/g, ' ').trim();
+    const option = document.createElement('option');
+    option.value = String(index); option.textContent = `${index + 1}. ${label.slice(0, 32)}`;
+    picker.appendChild(option);
+  });
+  const current = () => sections[Number(picker.value) || 0];
+  const sync = () => {
+    const section = current();
+    const scale = Number(section.dataset.fontScale || 100);
+    const height = Number(section.dataset.lineHeight || 150);
+    font.value = scale; line.value = height;
+    fontValue.value = `${scale}%`; lineValue.value = (height / 100).toFixed(2);
+  };
+  const apply = () => {
+    const section = current();
+    section.dataset.fontScale = font.value;
+    section.dataset.lineHeight = line.value;
+    section.style.setProperty('--section-font-scale', `${Number(font.value) / 100}`);
+    section.style.setProperty('--section-line-height', `${Number(line.value) / 100}`);
+    sync();
+  };
+  picker.addEventListener('change', sync); font.addEventListener('input', apply); line.addEventListener('input', apply);
+  reset.addEventListener('click', () => { font.value = 100; line.value = 150; apply(); });
+  sync();
+})();
+</script>
 <style id="print-density-fix">
 @media print {
   html { font-size: 17px; }
