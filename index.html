@@ -506,4 +506,42 @@
     }
   </script>
 </body>
-</html>
+</html><style id="a4-layout-fix">
+/* A4 layout fix: let content grow instead of clipping inside a fixed sheet. */
+html { background: #e2e8f0; }
+body { min-width: 0; overflow-x: hidden; }
+.a4-page {
+  width: min(210mm, calc(100vw - 2rem));
+  min-height: 297mm;
+  height: auto;
+  margin: 1.5rem auto;
+  overflow: visible;
+  justify-content: flex-start;
+}
+.a4-page > div { flex: 0 0 auto; }
+.a4-page > footer { margin-top: 1.25rem; flex: 0 0 auto; }
+.a4-page section, .a4-page table, .a4-page .bg-slate-50 { break-inside: avoid; page-break-inside: avoid; }
+@media (max-width: 820px) {
+  body.py-4 { padding-left: .5rem; padding-right: .5rem; }
+  .a4-page { width: 100%; padding: 8mm 7mm; margin: .75rem auto; }
+  .a4-page header { display: block; }
+  .a4-page header > div:last-child { margin-top: .75rem; flex-wrap: wrap; }
+}
+@media print {
+  html { background: #fff; }
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    height: auto;
+    margin: 0;
+    padding: 14mm 16mm;
+    overflow: visible;
+    display: block;
+    box-shadow: none;
+    page-break-after: always;
+    break-after: page;
+  }
+  .a4-page > footer { margin-top: 1.25rem; }
+  .a4-page:last-child { page-break-after: auto; break-after: auto; }
+}
+</style>
