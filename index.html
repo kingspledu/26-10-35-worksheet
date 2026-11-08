@@ -574,9 +574,18 @@ body { min-width: 0; overflow-x: hidden; }
 }
 </style>
 <style id="overflow-and-type-controls">
+/* On screen, a page grows with its content so later sheets never overlap it. */
+.a4-page {
+  aspect-ratio: auto !important;
+  width: min(210mm, calc(100vw - 2rem));
+  height: auto !important;
+  min-height: 297mm !important;
+  overflow: visible !important;
+}
 /* Allow print engines to continue long content onto the next physical sheet. */
 @media print {
   .a4-page {
+    aspect-ratio: auto !important;
     height: auto !important;
     min-height: 0 !important;
     overflow: visible !important;
