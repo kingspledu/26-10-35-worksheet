@@ -633,6 +633,12 @@ body { min-width: 0; overflow-x: hidden; }
   const lineValue = document.getElementById('lineHeightValue');
   const reset = document.getElementById('resetType');
   if (!picker || !sections.length) return;
+  // Keep the compact control labels readable even when the source page has legacy-encoded text.
+  const sectionLabel = document.querySelector('label[for="sectionPicker"]');
+  const lineLabel = document.querySelector('label[for="lineHeight"]');
+  if (sectionLabel?.firstChild) sectionLabel.firstChild.textContent = 'Section';
+  if (lineLabel?.firstChild) lineLabel.firstChild.textContent = 'Line spacing ';
+  if (reset) reset.textContent = 'Reset selected section';
   sections.forEach((section, index) => {
     section.classList.add('adjustable-section');
     section.dataset.sectionId = String(index);
